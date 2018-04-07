@@ -33,7 +33,6 @@ public abstract class MovingEntity : MonoBehaviour {
                 break;
         }
 
-
         RaycastHit2D hit;
         bool canMove = CanMove(moveVector, out hit);
 
@@ -41,9 +40,11 @@ public abstract class MovingEntity : MonoBehaviour {
         {
             transform.position += new Vector3Int(moveVector.x, moveVector.y, 0);
         }
+        else if(hit.transform != null)
+        {
+            OnCantMove(hit.collider.gameObject);
+        }
         return;
-        if (hit.transform == null)
-            return;
 
         //T hitComponent = hit.transform.GetComponent<T>();
 
@@ -73,5 +74,5 @@ public abstract class MovingEntity : MonoBehaviour {
         return false;
     }
 
-    //protected abstract void OnCantMove<T>(T component) where T : Component;
+    protected abstract void OnCantMove(GameObject blocker);
 }

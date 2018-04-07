@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -13,6 +14,7 @@ public enum MoveDirection
 
 public class Player : SingletonComponent<Player> {
 
+    public Action OnMoved = () => { };
 
     private Camera camera;
     private List<PlayerPart> parts = new List<PlayerPart>();
@@ -34,6 +36,11 @@ public class Player : SingletonComponent<Player> {
 
     private void Update()
     {
+        if (GameController.Instance.state != GameController.GameState.PLAYER_TURN)
+        {
+            return;
+        }
+
         //Selection
         if (Input.GetMouseButtonDown(0))
         {

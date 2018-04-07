@@ -8,4 +8,9 @@ public class PlayerLeg : PlayerPart
     {
         Player.Instance.MoveBody(direction);
     }
+
+    protected override void OnCantMove(GameObject blocker)
+    {
+        print("Can't move because of " + blocker.name);
+    }
 }
