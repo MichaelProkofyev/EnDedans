@@ -41,7 +41,7 @@ public class Player : SingletonComponent<Player> {
             return;
         }
 
-        //Selection
+        //Parts selection
         if (Input.GetMouseButtonDown(0))
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -59,20 +59,26 @@ public class Player : SingletonComponent<Player> {
         //Movement
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            selectedPart.HandleInputDirection(MoveDirection.UP);
+            HandleInputDirection(MoveDirection.UP);
         }
         else if(Input.GetKeyDown(KeyCode.DownArrow))
         {
-            selectedPart.HandleInputDirection(MoveDirection.DOWN);
+            HandleInputDirection(MoveDirection.DOWN);
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            selectedPart.HandleInputDirection(MoveDirection.LEFT);
+            HandleInputDirection(MoveDirection.LEFT);
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            selectedPart.HandleInputDirection(MoveDirection.RIGHT);
+            HandleInputDirection(MoveDirection.RIGHT);
         }
+    }
+
+    private void HandleInputDirection(MoveDirection direction)
+    {
+        selectedPart.HandleInputDirection(direction);
+        OnMoved();
     }
 
     public void MoveBody(MoveDirection direction)

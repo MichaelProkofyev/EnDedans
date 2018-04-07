@@ -11,6 +11,11 @@ public class PlayerArm : PlayerPart
 
     protected override void OnCantMove(GameObject blocker)
     {
-        print("Can't move because of " + blocker.name);
+        //print("Can't move because of " + blocker.name);
+        IDamagable damagableBlocker = blocker.GetComponent<IDamagable>();
+        if (damagableBlocker != null)
+        {
+            damagableBlocker.Damage();
+        }
     }
 }

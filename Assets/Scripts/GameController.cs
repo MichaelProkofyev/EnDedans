@@ -12,6 +12,8 @@ public class GameController : SingletonComponent<GameController> {
 
     public GameState state;
 
+    public List<Enemy> enemies = new List<Enemy>();
+
     // Use this for initialization
     void Start()
     {
@@ -24,7 +26,10 @@ public class GameController : SingletonComponent<GameController> {
         state = GameState.ENEMIES_TURN;
         //Move enemies
 
-
+        foreach (var enemy in enemies)
+        {
+            enemy.Act();
+        }
 
         state = GameState.PLAYER_TURN;
     }
