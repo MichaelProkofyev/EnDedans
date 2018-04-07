@@ -2,15 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum InputDirection
-{
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT
-}
-
-public abstract class PlayerPart : MonoBehaviour
+public abstract class PlayerPart : MovingEntity
 {
     [SerializeField] SpriteRenderer partSprite;
 
@@ -26,5 +18,5 @@ public abstract class PlayerPart : MonoBehaviour
         }
     }
 
-    public abstract void HandleInputDirection(InputDirection direction);
+    public abstract void HandleInputDirection(MoveDirection direction);
 }

@@ -4,25 +4,8 @@ using UnityEngine;
 
 public class PlayerLeg : PlayerPart
 {
-    public override void HandleInputDirection(InputDirection direction)
+    public override void HandleInputDirection(MoveDirection direction)
     {
-        Vector2 movementVector = Vector2.zero;
-
-        switch (direction)
-        {
-            case InputDirection.UP:
-                movementVector = Vector2.up;
-                break;
-            case InputDirection.DOWN:
-                movementVector = Vector2.down;
-                break;
-            case InputDirection.LEFT:
-                movementVector = Vector2.left;
-                break;
-            case InputDirection.RIGHT:
-                movementVector = Vector2.right;
-                break;
-        }
-        Player.Instance.Move(movementVector);
+        Player.Instance.MoveBody(direction);
     }
 }

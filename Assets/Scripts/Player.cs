@@ -1,6 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+
+public enum MoveDirection
+{
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT
+}
 
 public class Player : SingletonComponent<Player> {
 
@@ -43,26 +52,45 @@ public class Player : SingletonComponent<Player> {
         //Movement
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            selectedPart.HandleInputDirection(InputDirection.UP);
+            selectedPart.HandleInputDirection(MoveDirection.UP);
         }
         else if(Input.GetKeyDown(KeyCode.DownArrow))
         {
-            selectedPart.HandleInputDirection(InputDirection.DOWN);
+            selectedPart.HandleInputDirection(MoveDirection.DOWN);
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            selectedPart.HandleInputDirection(InputDirection.LEFT);
+            selectedPart.HandleInputDirection(MoveDirection.LEFT);
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            selectedPart.HandleInputDirection(InputDirection.RIGHT);
+            selectedPart.HandleInputDirection(MoveDirection.RIGHT);
         }
     }
 
-    //Transform into "makeAction" ?
-    public void Move(Vector2 direction)
+    public void MoveBody(MoveDirection direction)
     {
-        transform.position += (Vector3)direction;
+        var directionSortedParts = parts.OrderByDescending(p => 
+        {
+            Vector2 partPosition = p.transform.position;
+            switch (direction)
+            {
+                case MoveDirection.UP:
+                    return partPosition.y;
+                case MoveDirection.DOWN:
+                    return -partPosition.y;
+                case MoveDirection.LEFT:
+                    return -partPosition.x;
+                case MoveDirection.RIGHT:
+                    return partPosition.x;
+                default:
+                    return 0;
+            }
+        });
+        foreach (var part in directionSortedParts)
+        {
+            part.AttemptMove(direction);
+        }
     }
 
     private void SetPartSelected(PlayerPart newSelectedPart)
