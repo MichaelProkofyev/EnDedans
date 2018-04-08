@@ -14,22 +14,25 @@ public class Enemy : MovingEntity, IDamagable
 
     public void Act()
     {
-        return;
         MoveDirection movementDirection;
 
-        Vector2Int target = Vector2Int.zero;
+        var playerEye = GameObject.Find("Eye");
+        if (playerEye != null)
+        {
+            Vector2Int target = new Vector2Int((int)playerEye.transform.position.x, (int)playerEye.transform.position.y);
 
-        if (Mathf.Abs(target.x - transform.position.x) < float.Epsilon)
+            if (Mathf.Abs(target.x - transform.position.x) < float.Epsilon)
 
-            //If the y coordinate of the target's (player) position is greater than the y coordinate of this enemy's position set y direction 1 (to move up). If not, set it to -1 (to move down).
-            movementDirection = target.y > transform.position.y ? MoveDirection.UP : MoveDirection.DOWN;
+                //If the y coordinate of the target's (player) position is greater than the y coordinate of this enemy's position set y direction 1 (to move up). If not, set it to -1 (to move down).
+                movementDirection = target.y > transform.position.y ? MoveDirection.UP : MoveDirection.DOWN;
 
-        //If the difference in positions is not approximately zero (Epsilon) do the following:
-        else
-            movementDirection = target.x > transform.position.x ? MoveDirection.RIGHT : MoveDirection.LEFT;
+            //If the difference in positions is not approximately zero (Epsilon) do the following:
+            else
+                movementDirection = target.x > transform.position.x ? MoveDirection.RIGHT : MoveDirection.LEFT;
 
-        //Call the AttemptMove function and pass in the generic parameter Player, because Enemy is moving and expecting to potentially encounter a Player
-        AttemptMove(movementDirection);
+            //Call the AttemptMove function and pass in the generic parameter Player, because Enemy is moving and expecting to potentially encounter a Player
+            AttemptMove(movementDirection);
+        }
     }
 
     public void Damage()

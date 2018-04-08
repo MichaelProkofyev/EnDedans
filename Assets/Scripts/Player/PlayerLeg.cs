@@ -12,6 +12,5 @@ public class PlayerLeg : PlayerPart
     protected override void OnCantMove(GameObject blocker, MoveDirection direction)
     {
         base.OnCantMove(blocker, direction);
-        print("Can't move because of " + blocker.name);
     }
 }

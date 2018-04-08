@@ -12,6 +12,7 @@ public class PlayerArm : PlayerPart
     protected override void OnCantMove(GameObject blocker, MoveDirection direction)
     {
         base.OnCantMove(blocker, direction);
+
         //Try damaging
         IDamagable damagableBlocker = blocker.GetComponent<IDamagable>();
         if (damagableBlocker != null)

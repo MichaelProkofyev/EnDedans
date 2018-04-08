@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Wrapper : MonoBehaviour {
 
-    [SerializeField] private Wrapper linkedWrapper;
+    public Wrapper linkedWrapper;
     private BoxCollider2D collider;
 
     private void Awake()

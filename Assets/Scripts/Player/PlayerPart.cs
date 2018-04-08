@@ -18,5 +18,11 @@ public abstract class PlayerPart : MovingEntity
         }
     }
 
+    protected override void OnCantMove(GameObject blocker, MoveDirection direction)
+    {
+        base.OnCantMove(blocker, direction);
+    }
+
+
     public abstract void HandleInputDirection(MoveDirection direction);
 }

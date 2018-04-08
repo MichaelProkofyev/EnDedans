@@ -67,7 +67,7 @@ public abstract class MovingEntity : MonoBehaviour {
         //Re-enable boxCollider after linecast
         collider.enabled = true;
 
-        if (hit.transform == null)
+        if (hit.transform == null || hit.collider.isTrigger)
         {
             return true;
         }
