@@ -14,6 +14,7 @@ public class Enemy : MovingEntity, IDamagable
 
     public void Act()
     {
+        return;
         MoveDirection movementDirection;
 
         Vector2Int target = Vector2Int.zero;
@@ -41,8 +42,10 @@ public class Enemy : MovingEntity, IDamagable
         }
     }
 
-    protected override void OnCantMove(GameObject blocker)
+    protected override void OnCantMove(GameObject blocker, MoveDirection direction)
     {
+        base.OnCantMove(blocker, direction);
+
         print("ENEMY BLOCKED BY " + blocker);
     }
 

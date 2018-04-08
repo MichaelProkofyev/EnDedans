@@ -13,9 +13,69 @@ public abstract class MovingEntity : MonoBehaviour {
         blockingLayer = LayerMask.NameToLayer("Default");
     }
 
-    public virtual void AttemptMove(MoveDirection direction)
+    public void AttemptMove(MoveDirection direction)
     {
+        Vector2Int moveVector = DirectionToVector(direction);
+        RaycastHit2D hit;
+        bool canMove = CanMove(moveVector, out hit);
 
+        if (canMove)
+        {
+            transform.position += new Vector3Int(moveVector.x, moveVector.y, 0);
+            //Wrap movement around board
+            int wrappedXPos = Wrap((int)transform.position.x, BoardManager.Instance.bottomLeftCorner.x, BoardManager.Instance.topRightCorner.x + 1);
+            int wrappedYPos = Wrap((int)transform.position.y, BoardManager.Instance.bottomLeftCorner.y, BoardManager.Instance.topRightCorner.y + 1);
+            transform.position = new Vector3(wrappedXPos, wrappedYPos, 0);
+        }
+        else if(hit.transform != null)
+        {
+            OnCantMove(hit.collider.gameObject, direction);
+        }
+    }
+
+    protected virtual void OnCantMove(GameObject blocker, MoveDirection direction)
+    {
+        //Try getting the wrapper
+        Wrapper possibleWrapper = blocker.GetComponent<Wrapper>();
+        if (possibleWrapper != null)
+        {
+            var possibleBlocker = possibleWrapper.GetBlocker(direction);
+            if (possibleBlocker != null)
+            {
+                OnCantMove(possibleBlocker, direction);
+            }
+            else
+            {
+                //TODO: Replace with getting position form pared wrapper
+                Vector2Int moveVector = DirectionToVector(direction);
+                transform.position += new Vector3Int(moveVector.x, moveVector.y, 0);
+                //Wrap movement around board
+                int wrappedXPos = Wrap((int)transform.position.x, BoardManager.Instance.bottomLeftCorner.x, BoardManager.Instance.topRightCorner.x + 1);
+                int wrappedYPos = Wrap((int)transform.position.y, BoardManager.Instance.bottomLeftCorner.y, BoardManager.Instance.topRightCorner.y + 1);
+                transform.position = new Vector3(wrappedXPos, wrappedYPos, 0);
+            }
+        }
+    }
+
+    private bool CanMove(Vector2Int direction, out RaycastHit2D hit)
+    {
+        Vector2 start = transform.position;
+        Vector2 end = start + direction;
+
+        collider.enabled = false;
+        hit = Physics2D.Linecast(start, end);
+        //Re-enable boxCollider after linecast
+        collider.enabled = true;
+
+        if (hit.transform == null)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private Vector2Int DirectionToVector(MoveDirection direction)
+    {
         Vector2Int moveVector = Vector2Int.zero;
         switch (direction)
         {
@@ -32,47 +92,14 @@ public abstract class MovingEntity : MonoBehaviour {
                 moveVector = Vector2Int.right;
                 break;
         }
-
-        RaycastHit2D hit;
-        bool canMove = CanMove(moveVector, out hit);
-
-        if (canMove)
-        {
-            transform.position += new Vector3Int(moveVector.x, moveVector.y, 0);
-        }
-        else if(hit.transform != null)
-        {
-            OnCantMove(hit.collider.gameObject);
-        }
-        return;
-
-        //T hitComponent = hit.transform.GetComponent<T>();
-
-        //If canMove is false and hitComponent is not equal to null, meaning MovingObject is blocked and has hit something it can interact with.
-        //if (!canMove && hitComponent != null)
-
-            //Call the OnCantMove function and pass it hitComponent as a parameter.
-            //OnCantMove(hitComponent);
+        return moveVector;
     }
 
-    public bool CanMove(Vector2Int direction, out RaycastHit2D hit)
+    private int Wrap(int x, int x_min, int x_max)
     {
-        Vector2 start = transform.position;
-        Vector2 end = start + direction;
-
-        collider.enabled = false;
-        hit = Physics2D.Linecast(start, end);
-        //Re-enable boxCollider after linecast
-        collider.enabled = true;
-
-        if (hit.transform == null)
-        {
-            //If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
-            //StartCoroutine(SmoothMovement(end));
-            return true;
-        }
-        return false;
+        if (x < x_min)
+            return x_max - (x_min - x) % (x_max - x_min);
+        else
+            return x_min + (x - x_min) % (x_max - x_min);
     }
-
-    protected abstract void OnCantMove(GameObject blocker);
 }

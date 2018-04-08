@@ -9,9 +9,10 @@ public class PlayerArm : PlayerPart
         AttemptMove(direction);
     }
 
-    protected override void OnCantMove(GameObject blocker)
+    protected override void OnCantMove(GameObject blocker, MoveDirection direction)
     {
-        //print("Can't move because of " + blocker.name);
+        base.OnCantMove(blocker, direction);
+        //Try damaging
         IDamagable damagableBlocker = blocker.GetComponent<IDamagable>();
         if (damagableBlocker != null)
         {
