@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameController : SingletonComponent<GameController> {
@@ -12,7 +13,7 @@ public class GameController : SingletonComponent<GameController> {
     }
 
     public GameState state;
-    public List<Enemy> enemies = new List<Enemy>();
+    //public List<Enemy> enemies = new List<Enemy>();
 
 
     public int Score
@@ -40,8 +41,14 @@ public class GameController : SingletonComponent<GameController> {
 
     public void TreasureCollected()
     {
-        Score += 10;
+        Score += 1;
         BoardManager.Instance.RefreshBoard();
+    }
+
+    public void Restart()
+    {
+        Scene loadedLevel = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(loadedLevel.buildIndex);
     }
 
     void OnPlayerMoved()
@@ -49,7 +56,7 @@ public class GameController : SingletonComponent<GameController> {
         state = GameState.ENEMIES_TURN;
         //Move enemies
 
-        foreach (var enemy in enemies)
+        foreach (var enemy in FindObjectsOfType<Enemy>())
         {
             enemy.Act();
         }

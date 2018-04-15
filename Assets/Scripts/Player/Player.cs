@@ -28,9 +28,14 @@ public class Player : SingletonComponent<Player> {
         {
             parts.Add(part);
         }
-        if (parts.Count != 0)
+        foreach (var part in parts)
         {
-            SetPartSelected(parts[0]);
+            PlayerLeg possibleLeg = part as PlayerLeg;
+            if (possibleLeg != null)
+            {
+                SetPartSelected(possibleLeg);
+                break;
+            }
         }
 	}
 

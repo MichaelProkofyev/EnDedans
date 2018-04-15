@@ -16,6 +16,9 @@ public class BoardManager : SingletonComponent<BoardManager> {
     [SerializeField] Treasure treasurePrefab;
     [SerializeField] Transform treasureHolder;
 
+    [SerializeField] Enemy enemyPrefab;
+    [SerializeField] Transform enemiesHolder;
+
     // Update is called once per frame
     void Update () {
         if (Input.GetKeyDown(KeyCode.R))
@@ -59,8 +62,9 @@ public class BoardManager : SingletonComponent<BoardManager> {
         }
 
         bool treasureSpawned = false;
+        bool enemySpawned = false;
 
-        while (treasureSpawned == false)
+        while (treasureSpawned == false || enemySpawned == false)
         {
             //Destroy previous treasures
             foreach (Transform child in treasureHolder)
@@ -70,6 +74,12 @@ public class BoardManager : SingletonComponent<BoardManager> {
 
             //Destroy previous obstacles
             foreach (Transform child in obstaclesHolder)
+            {
+                Destroy(child.gameObject);
+            }
+
+            //Destroy previous enemies
+            foreach (Transform child in enemiesHolder)
             {
                 Destroy(child.gameObject);
             }
@@ -84,6 +94,12 @@ public class BoardManager : SingletonComponent<BoardManager> {
                         var newTreasure = Instantiate(treasurePrefab, treasureHolder);
                         newTreasure.transform.position = new Vector3(x, y, 0);
                         treasureSpawned = true;
+                    }
+                    else if (enemySpawned == false && Random.Range(0, 10) == 1)
+                    {
+                        var newEnemy = Instantiate(enemyPrefab, enemiesHolder);
+                        newEnemy.transform.position = new Vector3(x, y, 0);
+                        enemySpawned = true;
                     }
                     else if (Random.Range(0, 5) == 1)
                     {

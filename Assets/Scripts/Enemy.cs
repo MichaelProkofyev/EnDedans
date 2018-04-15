@@ -6,12 +6,6 @@ public class Enemy : MovingEntity, IDamagable
 {
     public int hp = 3;
 
-    // Use this for initialization
-    void Start()
-    {
-        GameController.Instance.enemies.Add(this);
-    }
-
     public void Act()
     {
         MoveDirection movementDirection;
@@ -40,7 +34,6 @@ public class Enemy : MovingEntity, IDamagable
         hp--;
         if (hp <= 0)
         {
-            GameController.Instance.enemies.Remove(this);
             Destroy(gameObject);
         }
     }
@@ -48,6 +41,12 @@ public class Enemy : MovingEntity, IDamagable
     protected override void OnCantMove(GameObject blocker, MoveDirection direction)
     {
         base.OnCantMove(blocker, direction);
+
+        var possiblePlayerLeg = blocker.GetComponent<PlayerLeg>();
+        if (possiblePlayerLeg != null)
+        {
+            GameController.Instance.Restart();
+        }
 
         print("ENEMY BLOCKED BY " + blocker);
     }

@@ -11,7 +11,7 @@ public class Obstacle : MonoBehaviour, IDamagable
         hp--;
         if (hp <= 0)
         {
-            Destroy(gameObject);
+            //Destroy(gameObject);
         }
     }
 
